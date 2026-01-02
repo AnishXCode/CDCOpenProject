@@ -253,7 +253,7 @@ export async function checkoutCart(items: CartItem[]) {
       data: {
         customerEmail: userEmail, 
         total: totalAmount,
-        status: "PENDING",
+        status: "COMPLETED",
         
         items: {
           create: items.map((item) => ({
