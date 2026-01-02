@@ -1,21 +1,20 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 import { registerUser } from '@/lib/actions';
 import Link from 'next/link';
 import { ArrowLeft, Mail, Lock, Loader2, CheckCircle, Star } from 'lucide-react';
 import Image from "next/image";
 
 export default function RegisterPage() {
-  const [state, dispatch] = useFormState(registerUser, undefined);
+  const [state, dispatch] = useActionState(registerUser, undefined);
 
   return (
     <div className="w-full h-screen lg:grid lg:grid-cols-2 overflow-hidden">
       
-      {/* LEFT PANEL: Customer Form Section */}
       <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-white relative">
         
-        {/* Back Button */}
         <div className="absolute top-6 left-6 md:top-8 md:left-8 z-10">
           <Link 
             href="/" 
@@ -28,7 +27,6 @@ export default function RegisterPage() {
 
         <div className="mx-auto w-full max-w-sm space-y-6">
           
-          {/* Header */}
           <div className="text-center lg:text-left space-y-2">
             <h1 className="text-3xl font-bold tracking-tight text-slate-900">
               Join our Store
@@ -38,7 +36,6 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* SUCCESS STATE */}
           {state?.success ? (
             <div className="rounded-xl bg-green-50 p-6 border border-green-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center gap-4 mb-4">
@@ -58,7 +55,6 @@ export default function RegisterPage() {
               </Link>
             </div>
           ) : (
-            /* FORM STATE */
             <form action={dispatch} className="space-y-4">
               
               <div className="space-y-1">
@@ -111,7 +107,6 @@ export default function RegisterPage() {
             </form>
           )}
 
-          {/* Footer Terms */}
           {!state?.success && (
             <div className="text-center text-sm text-slate-500">
               Already have an account?{" "}
@@ -127,15 +122,12 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      {/* RIGHT PANEL: Shopping / Brand Visuals (Hidden on mobile) */}
       <div className="hidden bg-slate-900 lg:flex lg:flex-col lg:justify-between p-12 relative overflow-hidden">
         
-        {/* Abstract Background */}
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-indigo-500 rounded-full blur-[100px] opacity-20"></div>
         <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-blue-500 rounded-full blur-[100px] opacity-20"></div>
 
-        {/* Store Logo */}
         <div className="relative z-10 flex items-center gap-3 text-white font-bold text-xl tracking-wide">
           <div className="relative h-10 w-10 overflow-hidden rounded-lg shadow-lg shadow-blue-900/50">
              <Image 
@@ -148,7 +140,6 @@ export default function RegisterPage() {
           AethelNova
         </div>
 
-        {/* Customer Testimonial / Value Prop */}
         <div className="relative z-10 max-w-md space-y-6">
           <div className="flex gap-1">
             {[...Array(5)].map((_, i) => (
