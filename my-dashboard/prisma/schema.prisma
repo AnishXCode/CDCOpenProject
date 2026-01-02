@@ -8,6 +8,7 @@ datasource db {
 }
 
 enum Role {
+  USER
   ADMIN
   SUPER_ADMIN
 }
@@ -16,7 +17,7 @@ model User {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   email    String @unique
   password String
-  role     Role   @default(ADMIN)
+  role     Role   @default(USER)
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -33,6 +34,8 @@ model Product {
   categoryId  String   @db.ObjectId
   category    Category @relation(fields: [categoryId], references: [id])
 
+  orderItems  OrderItem[]
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -42,4 +45,32 @@ model Category {
   name     String
   
   products Product[]
+}
+
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+model Order {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  customerEmail String
+  total         Float
+  status        OrderStatus @default(PENDING)
+  items         OrderItem[]
+  createdAt     DateTime    @default(now())
+}
+
+model OrderItem {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String  @db.ObjectId
+  order     Order   @relation(fields: [orderId], references: [id])
+  
+  productId String  @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
+  
+  quantity  Int
+  price     Float   // Snapshot of price at time of order
 }

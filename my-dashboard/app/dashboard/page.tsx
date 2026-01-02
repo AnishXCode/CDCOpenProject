@@ -1,80 +1,92 @@
 import { prisma } from "@/lib/prisma";
 import { RevenueChart } from "@/components/RevenueChart";
-import { Package, Users, Activity, IndianRupee } from "lucide-react";
+import { CategoryPieChart } from "@/components/CategoryPieChart"; // <--- Import New Chart
+import { Package, Users, Activity, IndianRupee, TrendingUp } from "lucide-react";
 
 export default async function DashboardPage() {
   const productCount = await prisma.product.count();
   const categoryCount = await prisma.category.count();
-  
-  
+  const totalRevenue = 45231.89;
+
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold text-gray-900">Dashboard Overview</h1>
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-500 mt-1">Overview of your store's performance</p>
+      </div>
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {/* --- KPI CARDS --- */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         
-        <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium text-gray-500">Total Revenue</h3>
-            <IndianRupee className="h-4 w-4 text-gray-500" />
+        <div className="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between pb-4">
+            <h3 className="text-sm font-medium text-gray-500">Total Revenue</h3>
+            <div className="p-2 bg-blue-50 rounded-lg">
+                <IndianRupee className="h-5 w-5 text-blue-600" />
+            </div>
           </div>
-          <div className="text-2xl font-bold">₹45,231.89</div>
-          <p className="text-xs text-green-500 font-medium">+20.1% from last month</p>
+          <div className="text-3xl font-bold text-gray-900">₹{totalRevenue.toLocaleString()}</div>
+          <div className="flex items-center mt-2 text-sm text-green-600 font-medium">
+             <TrendingUp className="h-4 w-4 mr-1" />
+             <span>+20.1%</span>
+             <span className="text-gray-400 font-normal ml-2">from last month</span>
+          </div>
         </div>
 
-        <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium text-gray-500">Products</h3>
-            <Package className="h-4 w-4 text-gray-500" />
+        <div className="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between pb-4">
+            <h3 className="text-sm font-medium text-gray-500">Products</h3>
+            <div className="p-2 bg-purple-50 rounded-lg">
+                <Package className="h-5 w-5 text-purple-600" />
+            </div>
           </div>
-          <div className="text-2xl font-bold">{productCount}</div>
-          <p className="text-xs text-gray-500">Items currently in inventory</p>
+          <div className="text-3xl font-bold text-gray-900">{productCount}</div>
+          <p className="text-sm text-gray-400 mt-2">Items in inventory</p>
         </div>
 
-        <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium text-gray-500">Categories</h3>
-            <Activity className="h-4 w-4 text-gray-500" />
+        <div className="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between pb-4">
+            <h3 className="text-sm font-medium text-gray-500">Categories</h3>
+            <div className="p-2 bg-amber-50 rounded-lg">
+                <Activity className="h-5 w-5 text-amber-600" />
+            </div>
           </div>
-          <div className="text-2xl font-bold">{categoryCount}</div>
-          <p className="text-xs text-gray-500">Active product categories</p>
+          <div className="text-3xl font-bold text-gray-900">{categoryCount}</div>
+          <p className="text-sm text-gray-400 mt-2">Active categories</p>
         </div>
 
-        <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between space-y-0 pb-2">
-            <h3 className="tracking-tight text-sm font-medium text-gray-500">Active Now</h3>
-            <Users className="h-4 w-4 text-gray-500" />
+        <div className="p-6 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between pb-4">
+            <h3 className="text-sm font-medium text-gray-500">Active Users</h3>
+            <div className="p-2 bg-emerald-50 rounded-lg">
+                <Users className="h-5 w-5 text-emerald-600" />
+            </div>
           </div>
-          <div className="text-2xl font-bold">+573</div>
-          <p className="text-xs text-gray-500">+201 since last hour</p>
+          <div className="text-3xl font-bold text-gray-900">+573</div>
+          <p className="text-sm text-gray-400 mt-2">Currently active</p>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <div className="col-span-4 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 className="text-lg font-bold mb-4">Revenue Overview</h3>
+      {/* --- CHARTS SECTION --- */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
+        
+        {/* Main Revenue Chart (Takes up 4 columns) */}
+        <div className="col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <div className="mb-6">
+            <h3 className="text-lg font-bold text-gray-900">Revenue Overview</h3>
+            <p className="text-sm text-gray-500">Monthly revenue analytics</p>
+          </div>
           <RevenueChart />
         </div>
         
-        <div className="col-span-3 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-           <h3 className="text-lg font-bold mb-4">Recent Sales</h3>
-           <p className="text-sm text-gray-500">You made 265 sales this month.</p>
-           <div className="mt-8 space-y-4">
-              <div className="flex items-center">
-                 <div className="ml-4 space-y-1">
-                    <p className="text-sm font-medium leading-none">Olivia Martin</p>
-                    <p className="text-sm text-gray-500">olivia.martin@email.com</p>
-                 </div>
-                 <div className="ml-auto font-medium">+₹1,999.00</div>
-              </div>
-              <div className="flex items-center">
-                 <div className="ml-4 space-y-1">
-                    <p className="text-sm font-medium leading-none">Jackson Lee</p>
-                    <p className="text-sm text-gray-500">jackson.lee@email.com</p>
-                 </div>
-                 <div className="ml-auto font-medium">+₹39.00</div>
-              </div>
-           </div>
+        {/* Category Pie Chart (Takes up 3 columns) */}
+        <div className="col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+           <div className="mb-6">
+            <h3 className="text-lg font-bold text-gray-900">Sales by Category</h3>
+            <p className="text-sm text-gray-500">Distribution across top categories</p>
+          </div>
+           <CategoryPieChart />
         </div>
       </div>
     </div>

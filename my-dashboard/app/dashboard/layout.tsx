@@ -1,19 +1,23 @@
-import { Sidebar } from "@/components/Sidebar";
+import { auth } from "@/auth"; 
+import { redirect } from "next/navigation";
+import DashboardLayoutClient from "./DashboardLayoutClient"; 
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+  
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  const userRole = (session.user as any).role;
+
+  if (userRole !== "ADMIN" && userRole !== "SUPER_ADMIN") {
+    redirect("/"); 
+  }
+
   return (
-    <div className="flex h-screen bg-gray-100">
-      <aside className="hidden md:flex h-full">
-        <Sidebar />
-      </aside>
-      
-      <main className="flex-1 overflow-y-auto p-8">
-        {children}
-      </main>
-    </div>
+    <DashboardLayoutClient userRole={userRole}>
+      {children}
+    </DashboardLayoutClient>
   );
 }

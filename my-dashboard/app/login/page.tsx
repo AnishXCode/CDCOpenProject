@@ -1,4 +1,5 @@
 'use client';
+import Link from "next/link";
 
 import { authenticate } from '@/lib/actions';
 import { useActionState } from 'react';
@@ -8,6 +9,15 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <div className="absolute top-4 left-4">
+        <Link 
+          href="/" 
+          className="flex items-center text-sm text-gray-600 hover:text-black transition-colors"
+        >
+          <span className="mr-2 text-lg">&#8592;</span> 
+          Back to Home
+        </Link>
+      </div>
       <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-10 shadow-md">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">
@@ -57,6 +67,18 @@ export default function LoginPage() {
             >
               Sign in
             </button>
+          </div>
+
+          <div className="mt-6 text-center text-sm">
+            <p className="text-gray-600">
+              Don't have an account?{" "}
+              <Link 
+                href="/register" 
+                className="text-blue-600 hover:underline font-bold"
+              >
+                Register here
+              </Link>
+            </p>
           </div>
         </form>
       </div>
