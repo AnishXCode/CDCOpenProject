@@ -229,3 +229,48 @@ export async function placeOrder(productId: string, quantity: number, price: num
 
   redirect(`/orders?success=true`);
 }
+
+type CartItem = {
+  id: string; 
+  quantity: number;
+  price: number;
+};
+
+export async function checkoutCart(items: CartItem[]) {
+  "use server";
+
+  const session = await auth();
+  const userEmail = session?.user?.email;
+
+  if (!userEmail) {
+    redirect("/login");
+  }
+
+  const totalAmount = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  try {
+    await prisma.order.create({
+      data: {
+        customerEmail: userEmail, 
+        total: totalAmount,
+        status: "PENDING",
+        
+        items: {
+          create: items.map((item) => ({
+            product: { connect: { id: item.id } }, 
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Checkout Failed:", error);
+    return { success: false, error: "Failed to place order." };
+  }
+
+  revalidatePath("/orders");
+  revalidatePath("/dashboard");
+  
+  return { success: true };
+}

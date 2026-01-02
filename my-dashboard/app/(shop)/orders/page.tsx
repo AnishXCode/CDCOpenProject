@@ -1,9 +1,17 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+import { 
+  ArrowLeft, 
+  Package, 
+  ShoppingBag, 
+  Calendar, 
+  CheckCircle, 
+  Clock, 
+  XCircle, 
+  Truck 
+} from "lucide-react";
 
 export default async function OrdersPage({
   searchParams,
@@ -29,78 +37,157 @@ export default async function OrdersPage({
     orderBy: { createdAt: "desc" },
   });
 
+  // Helper for Status Badge styling
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case "COMPLETED": return { color: "bg-green-100 text-green-700 border-green-200", icon: CheckCircle };
+      case "CANCELLED": return { color: "bg-red-100 text-red-700 border-red-200", icon: XCircle };
+      case "SHIPPED":   return { color: "bg-blue-100 text-blue-700 border-blue-200", icon: Truck };
+      default:          return { color: "bg-yellow-100 text-yellow-700 border-yellow-200", icon: Clock }; // PENDING
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="min-h-screen bg-slate-50 py-12">
+      <div className="container mx-auto px-4 max-w-5xl">
 
+        {/* 1. Header & Navigation */}
         <div className="mb-8">
-        <Link 
-          href="/" 
-          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Shop
-        </Link>
-      </div>
-      
-      <h1 className="text-3xl font-bold mb-8">My Orders</h1>
-
-      {params.success && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6 flex items-center gap-2">
-          <span className="text-xl">🎉</span>
-          <strong>Success!</strong> Your order has been placed successfully.
+          <Link 
+            href="/" 
+            className="group inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+          >
+            <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-full bg-white border border-slate-200 shadow-sm group-hover:shadow-md transition-all">
+              <ArrowLeft className="h-4 w-4" />
+            </div>
+            Back to Shop
+          </Link>
         </div>
-      )}
-
-      {orders.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">You haven't placed any orders yet.</p>
+        
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">My Orders</h1>
+            <p className="mt-2 text-slate-500">View your order history and status.</p>
+          </div>
         </div>
-      ) : (
-        <div className="space-y-6">
-          {orders.map((order) => (
-            <div key={order.id} className="border rounded-lg overflow-hidden shadow-sm">
-              <div className="bg-gray-50 px-6 py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center border-b gap-4">
-                <div>
-                  <p className="text-xs text-gray-500 uppercase font-semibold">Order ID</p>
-                  <p className="font-mono text-xs text-gray-700 break-all">{order.id}</p>
-                </div>
-                <div className="text-left sm:text-right">
-                  <p className="text-xs text-gray-500 uppercase font-semibold">Total Amount</p>
-                  <p className="font-bold text-lg text-gray-900">${order.total.toFixed(2)}</p>
-                </div>
+
+        {/* 2. Success Message (Conditional) */}
+        {params.success && (
+          <div className="mb-8 rounded-xl border border-green-200 bg-green-50 p-4 animate-in fade-in slide-in-from-top-4 duration-500">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+                <CheckCircle className="h-5 w-5" />
               </div>
-              <div className="p-6 bg-white">
-                {order.items.map((item) => (
-                  <div key={item.id} className="flex items-center gap-4 py-3 border-b last:border-0">
-                    <div className="h-16 w-16 bg-gray-100 rounded-md overflow-hidden relative flex-shrink-0">
-                       {item.product.images[0] ? (
-                         <img 
-                           src={item.product.images[0]} 
-                           alt={item.product.name}
-                           className="w-full h-full object-cover"
-                         />
-                       ) : (
-                         <div className="flex h-full items-center justify-center text-xs text-gray-400">No Img</div>
-                       )}
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900">{item.product.name}</p>
-                      <p className="text-sm text-gray-500">
-                        Qty: {item.quantity} × ${item.price}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="bg-gray-50 px-6 py-2">
-                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Status: {order.status}
-                 </span>
+              <div>
+                <h3 className="font-semibold text-green-900">Order Placed Successfully!</h3>
+                <p className="text-sm text-green-700">Thank you for shopping with AethelNova. You will receive an email confirmation shortly.</p>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        )}
+
+        {/* 3. Orders List or Empty State */}
+        {orders.length === 0 ? (
+          <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-50">
+              <Package className="h-8 w-8 text-slate-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-900">No orders yet</h3>
+            <p className="mt-1 max-w-sm text-sm text-slate-500">
+              It looks like you haven&apos;t placed any orders yet.
+            </p>
+            <Link
+              href="/"
+              className="mt-6 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-500 hover:shadow-md"
+            >
+              Start Shopping
+            </Link>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {orders.map((order) => {
+              const statusStyle = getStatusStyle(order.status);
+              const StatusIcon = statusStyle.icon;
+
+              return (
+                <div key={order.id} className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:shadow-md">
+                  
+                  {/* Card Header */}
+                  <div className="border-b border-slate-100 bg-slate-50/50 p-4 md:px-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                      <div className="flex flex-wrap gap-6 text-sm">
+                        <div>
+                          <p className="font-medium text-slate-500 text-xs uppercase tracking-wider">Order ID</p>
+                          <p className="font-mono font-bold text-slate-700">#{order.id.slice(-6).toUpperCase()}</p>
+                        </div>
+                        <div>
+                          <p className="font-medium text-slate-500 text-xs uppercase tracking-wider">Date Placed</p>
+                          <div className="flex items-center gap-1.5 font-medium text-slate-900 mt-0.5">
+                            <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                            {new Date(order.createdAt).toLocaleDateString("en-IN", {
+                              day: 'numeric', month: 'short', year: 'numeric'
+                            })}
+                          </div>
+                        </div>
+                        <div>
+                          <p className="font-medium text-slate-500 text-xs uppercase tracking-wider">Total Amount</p>
+                          <p className="font-bold text-slate-900 mt-0.5">₹{order.total.toLocaleString('en-IN')}</p>
+                        </div>
+                      </div>
+
+                      {/* Status Badge */}
+                      <div className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${statusStyle.color}`}>
+                        <StatusIcon className="h-3.5 w-3.5" />
+                        {order.status}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Body (Items) */}
+                  <div className="p-4 md:p-6 bg-white">
+                    <div className="divide-y divide-slate-100">
+                      {order.items.map((item) => (
+                        <div key={item.id} className="flex gap-4 py-4 first:pt-0 last:pb-0">
+                          {/* Item Image */}
+                          <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-slate-100 bg-slate-50">
+                            {item.product.images[0] ? (
+                              <img 
+                                src={item.product.images[0]} 
+                                alt={item.product.name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="flex h-full items-center justify-center text-slate-300">
+                                <ShoppingBag className="h-6 w-6 opacity-30" />
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Item Info */}
+                          <div className="flex flex-1 flex-col justify-center">
+                            <p className="font-semibold text-slate-900">{item.product.name}</p>
+                            <p className="text-sm text-slate-500">
+                              Qty: {item.quantity} × ₹{item.price.toLocaleString('en-IN')}
+                            </p>
+                          </div>
+                          
+                          {/* Item Total */}
+                          <div className="flex items-center text-right">
+                             <p className="font-medium text-slate-900">
+                               ₹{(item.price * item.quantity).toLocaleString('en-IN')}
+                             </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
