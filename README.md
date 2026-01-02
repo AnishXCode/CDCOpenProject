@@ -15,7 +15,7 @@ Aethel Nova is a robust web application designed with a comprehensive Role-Based
 * **Responsive Design:** Fully optimized for desktop, tablet, and mobile devices.
 * **Data Integrity:** Type-safe database interactions using Prisma ORM.
 
-### 🔐 Authentication & Security
+### Authentication & Security
 * **NextAuth v5 Integration:** Robust authentication handling login sessions and protected routes.
 * **Role-Based Access Control (RBAC):** Middleware checks ensuring users only access pages authorized for their specific role.
 * **Secure API Endpoints:** Backend protection preventing unauthorized data manipulation.
