@@ -1,7 +1,4 @@
-# CDC OpenProject
-CDC WebD open project
-
-# Aethel Nova Dashboard
+# Aethel Nova Dashboard (CDC Open Project - WebD)
 
 [![Deploy with Vercel](https://vercel.com/button)](https://aethel-nova-pi.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
