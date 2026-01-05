@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import { ShoppingBag, Check } from "lucide-react";
+import { ShoppingBag, Check, Plus } from "lucide-react";
 import { useState } from "react";
 
 interface AddToCartProps {
@@ -26,7 +26,6 @@ export function AddToCart({ product }: AddToCartProps) {
       quantity: 1,
     });
     
-    // Visual feedback
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
@@ -36,27 +35,32 @@ export function AddToCart({ product }: AddToCartProps) {
       <button
         onClick={handleAdd}
         disabled={isAdded}
-        className={`w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-lg transition-all ${
+        className={`group relative w-full flex items-center justify-center gap-2.5 py-4 rounded-xl font-bold text-lg transition-all duration-300 ease-out active:scale-[0.98] ${
           isAdded
-            ? "bg-green-600 text-white shadow-green-200"
-            : "bg-slate-900 text-white hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-900/20 active:scale-[0.98]"
+            ? "bg-emerald-500 text-white shadow-lg shadow-emerald-200 cursor-default"
+            : "bg-violet-600 text-white shadow-xl shadow-violet-200 hover:bg-violet-700 hover:shadow-violet-300"
         }`}
       >
         {isAdded ? (
           <>
-            <Check className="h-5 w-5" />
-            Added to Cart
+            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
+                <Check className="h-4 w-4" />
+            </div>
+            <span>Added to Cart</span>
           </>
         ) : (
           <>
-            <ShoppingBag className="h-5 w-5" />
-            Add to Cart - ₹{product.price.toLocaleString("en-IN")}
+            <ShoppingBag className="h-5 w-5 transition-transform" />
+            <span>Add to Cart</span>
+            <span className="ml-1 opacity-80 font-medium text-base">
+                | ₹{product.price.toLocaleString("en-IN")}
+            </span>
           </>
         )}
       </button>
       
-      <p className="text-xs text-center text-slate-400">
-        Free shipping on orders over ₹999
+      <p className="text-[11px] font-medium text-center text-gray-400 uppercase tracking-wide">
+        Instant processing & Fast Dispatch
       </p>
     </div>
   );

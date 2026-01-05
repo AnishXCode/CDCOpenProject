@@ -2,13 +2,12 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 
-// AethelNova Premium Palette
 const COLORS = [
-  "#0f172a", // Slate 900 (Darkest)
-  "#3b82f6", // Blue 500 (Brand Primary)
-  "#64748b", // Slate 500
-  "#cbd5e1", // Slate 300
-  "#06b6d4", // Cyan 500 (Accent)
+  "#7c3aed", 
+  "#10b981", 
+  "#f59e0b", 
+  "#f43f5e", 
+  "#3b82f6", 
 ];
 
 const MOCK_DATA = [
@@ -32,37 +31,39 @@ export function CategoryPieChart({ data = MOCK_DATA }: CategoryPieChartProps) {
             data={data}
             cx="50%"
             cy="50%"
-            innerRadius={80} // Thinner ring for modern look
-            outerRadius={110}
-            paddingAngle={2} // Adds white space between segments
+            innerRadius={65} 
+            outerRadius={105}
+            paddingAngle={5} 
+            cornerRadius={8} 
             dataKey="value"
-            stroke="none" // Removes the default outline
+            stroke="none"
           >
             {data.map((entry, index) => (
               <Cell 
                 key={`cell-${index}`} 
                 fill={COLORS[index % COLORS.length]} 
-                className="stroke-white stroke-2 hover:opacity-80 transition-opacity duration-300"
+                className="transition-all duration-300 hover:opacity-80 focus:outline-none"
               />
             ))}
           </Pie>
           
           <Tooltip 
+            cursor={{ fill: 'transparent' }}
             content={({ active, payload }) => {
               if (active && payload && payload.length) {
                 const data = payload[0].payload;
                 return (
-                  <div className="rounded-lg border border-slate-200 bg-white/95 p-3 shadow-lg backdrop-blur-sm">
+                  <div className="rounded-xl border border-gray-100 bg-white p-3 shadow-xl shadow-gray-200/50">
                     <div className="flex items-center gap-2 mb-1">
                       <div 
-                        className="h-2 w-2 rounded-full" 
+                        className="h-2 w-2 rounded-full ring-2 ring-white" 
                         style={{ backgroundColor: payload[0].color }}
                       />
-                      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                      <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
                         {data.name}
                       </span>
                     </div>
-                    <p className="text-lg font-bold text-slate-900">
+                    <p className="text-lg font-extrabold text-gray-900">
                       ₹{Number(data.value).toLocaleString('en-IN')}
                     </p>
                   </div>
@@ -76,8 +77,9 @@ export function CategoryPieChart({ data = MOCK_DATA }: CategoryPieChartProps) {
             verticalAlign="bottom" 
             height={36} 
             iconType="circle"
+            iconSize={8}
             formatter={(value) => (
-              <span className="text-sm font-medium text-slate-600 ml-1">{value}</span>
+              <span className="text-xs font-semibold text-gray-500 ml-1">{value}</span>
             )} 
           />
         </PieChart>

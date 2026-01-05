@@ -19,47 +19,66 @@ const data = [
 
 export function RevenueChart() {
   return (
-    <ResponsiveContainer width="100%" height={350}>
+    <ResponsiveContainer width="100%" height="100%">
       <AreaChart data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
         <defs>
-          <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3}/>
-            <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
+          <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.3}/>
+            <stop offset="95%" stopColor="#7c3aed" stopOpacity={0}/>
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+        
+        <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="#f3f4f6" />
+        
         <XAxis 
           dataKey="name" 
           stroke="#9ca3af" 
-          fontSize={12} 
+          fontSize={11} 
+          fontWeight={500}
           tickLine={false} 
           axisLine={false} 
-          tickMargin={10}
+          tickMargin={12}
         />
+        
         <YAxis 
           stroke="#9ca3af" 
-          fontSize={12} 
+          fontSize={11} 
+          fontWeight={500}
           tickLine={false} 
           axisLine={false} 
           tickFormatter={(value) => `₹${value}`} 
         />
+        
         <Tooltip
-          contentStyle={{ 
-            backgroundColor: "#fff", 
-            borderRadius: "8px", 
-            border: "1px solid #e5e7eb", 
-            boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" 
+          cursor={{ stroke: '#e5e7eb', strokeWidth: 1, strokeDasharray: '4 4' }}
+          content={({ active, payload, label }) => {
+            if (active && payload && payload.length) {
+              return (
+                <div className="rounded-xl border border-gray-100 bg-white p-3 shadow-xl shadow-gray-200/50">
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                    {label}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-violet-600 ring-2 ring-violet-100" />
+                    <span className="text-lg font-extrabold text-gray-900">
+                      ₹{Number(payload[0].value).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                </div>
+              );
+            }
+            return null;
           }}
-          itemStyle={{ color: "#1f2937" }}
-          formatter={(value: any) => [`₹${value?.toLocaleString()}`, "Revenue"]}
         />
+        
         <Area 
           type="monotone" 
           dataKey="total" 
-          stroke="#2563eb" 
+          stroke="#7c3aed" 
           strokeWidth={3}
           fillOpacity={1} 
-          fill="url(#colorTotal)" 
+          fill="url(#colorRevenue)" 
+          activeDot={{ r: 6, strokeWidth: 0, fill: '#7c3aed' }}
         />
       </AreaChart>
     </ResponsiveContainer>

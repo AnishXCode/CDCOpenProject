@@ -26,14 +26,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load from LocalStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem("aethelnova-cart");
     if (saved) setItems(JSON.parse(saved));
     setIsLoaded(true);
   }, []);
 
-  // Save to LocalStorage whenever items change
   useEffect(() => {
     if (isLoaded) {
       localStorage.setItem("aethelnova-cart", JSON.stringify(items));
