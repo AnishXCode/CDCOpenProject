@@ -105,6 +105,7 @@ Follow these steps to set up the project locally.
 
 4.  **Database Setup:**
     ```bash
+    npx tsx prisma/seed.ts
     npx prisma generate
     npx prisma db push
     ```
