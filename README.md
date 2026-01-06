@@ -1,9 +1,10 @@
 # Aethel Nova Dashboard (CDC Open Project - WebD)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://aethel-nova-pi.vercel.app)
+[![View here](https://vercel.com/button)](https://aethel-nova-pi.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Live Production Link:** [https://aethel-nova-pi.vercel.app](https://aethel-nova-pi.vercel.app)
+**Demo Video Link:** [Click here](https://drive.google.com/drive/folders/1OuZbWcL5LERaMkiezfNUa0R6r8z7kNAy?usp=sharing)
 
 ## 📖 Project Overview
 
@@ -126,7 +127,7 @@ You can test the Role-Based Access Control (RBAC) using the following pre-config
 | Role | Email | Password | Access Scope |
 | :--- | :--- | :--- | :--- |
 | **Super Admin** | `admin@demo.com` | `admin123` | Full System Control |
-| **Admin** | `admin2@demo.com` | `admin123` | Products % Statistics Oversight |
+| **Admin** | `admin2@demo.com` | `admin123` | Products & Statistics Oversight |
 | **General User** | `user@demo.com` | `user123` | Personal Dashboard Only |
 
 ---
